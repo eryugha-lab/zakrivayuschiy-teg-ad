@@ -1,41 +1,42 @@
-/* этот скрипт использует такие имена классов:
-✦ like-icon — для svg-иконки анимированного сердца
-✦ card__like-button — для кнопки Like рядом с иконкой
-✦ card__icon-button — для кнопки, оборачивающей иконку
-✦ card__icon-button — для кнопки, оборачивающей иконку
-✦ is-liked — для обозначения состояния лайкнутой иконки в виде сердца
-✦ button__text — для обозначения текстового элемента внутри кнопки
-Если эти классы поменять в HTML, скрипт перестанет работать. Будьте аккуратны.
-*/
-
+// Like icon handling
 const likeHeartArray = document.querySelectorAll('.like-icon');
 const likeButtonArray = document.querySelectorAll('.card__like-button');
 const iconButtonArray = document.querySelectorAll('.card__icon-button');
 
+// Toggle is-liked class on click
 iconButtonArray.forEach((iconButton, index) => {
-  iconButton.onclick = () =>
-    toggleIsLiked(likeHeartArray[index], likeButtonArray[index]);
+  iconButton.onclick = () => {
+    likeHeartArray[index].classList.toggle('is-liked');
+  };
 });
 
-likeButtonArray.forEach((button, index) => {
-  button.onclick = () => toggleIsLiked(likeHeartArray[index], button);
+// Like button handling
+likeButtonArray.forEach((likeButton, index) => {
+  likeButton.onclick = () => {
+    likeHeartArray[index].classList.toggle('is-liked');
+  };
 });
 
-function toggleIsLiked(heart, button) {
-  heart.classList.toggle('is-liked');
-  setButtonText(heart, button);
-}
+// Modal dialog handling
+const modal = document.querySelector('.modal');
+const openDialogButtons = document.querySelectorAll('[data-dialog-open]');
 
-function setButtonText(heart, button) {
-  if ([...heart.classList].includes('is-liked')) {
-    setTimeout(
-      () => (button.querySelector('.button__text').textContent = 'Unlike'),
-      500
-    );
-  } else {
-    setTimeout(
-      () => (button.querySelector('.button__text').textContent = 'Like'),
-      500
-    );
+openDialogButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    modal.showModal();
+  });
+});
+
+// Close modal on submit button
+const modalForm = modal.querySelector('form');
+modalForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  modal.close();
+});
+
+// Close modal on backdrop click
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.close();
   }
-}
+});
